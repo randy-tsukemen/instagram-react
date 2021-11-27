@@ -27,7 +27,14 @@ const Post = ({ id, username, userImg, img, caption }) => {
       <img src={img} alt="" className="object-cover w-full" />
 
       {/* Button */}
-
+      <div className="flex justify-between px-4 py-4">
+        <div className="flex space-x-4">
+          <HeartIcon className="btn" />
+          <ChatIcon className="btn" />
+          <PaperAirplaneIcon className="btn" />
+        </div>
+        <BookmarkIcon className="btn" />
+      </div>
       {/* caption */}
 
       {/* comments */}
