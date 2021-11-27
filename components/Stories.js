@@ -16,7 +16,8 @@ const Stories = () => {
   return (
     <div
       className="flex space-x-2 p-6 bg-white mt-8 
-    border-gray-200 border overflow-x-scroll rounded-sm"
+    border-gray-200 border overflow-x-scroll 
+      rounded-sm scrollbar-thin scrollbar-thumb-black"
     >
       {suggestions.map((profile) => (
         <Story
