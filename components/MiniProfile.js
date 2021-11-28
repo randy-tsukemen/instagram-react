@@ -11,11 +11,11 @@ const MiniProfile = () => {
         src="https://pbs.twimg.com/media/FE_XhimUUAMsCLN?format=jpg"
         alt="profile"
       />
-      <div>
-        <h2>rushia</h2>
-        <h3>Welcome to hololive</h3>
+      <div className="flex-1 mx-4">
+        <h2 className="font-bold">rushia</h2>
+        <h3 className="text-sm text-gray-400">Welcome to hololive</h3>
       </div>
-      <button>Sign out</button>
+      <button className="text-blue-400 text-sm font-semibold">Sign out</button>
     </div>
   );
 };
