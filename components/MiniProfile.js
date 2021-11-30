@@ -4,7 +4,7 @@ const MiniProfile = () => {
   return (
     <div
       className="flex items-center justify-between
-      mt-14 ml-10 bg-gray-200"
+      mt-14 ml-10 hover:bg-gray-100"
     >
       <img
         className="w-16 h-16 object-contain rounded-full border p-[2px]"
