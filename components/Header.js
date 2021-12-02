@@ -13,8 +13,14 @@ import {
   SearchIcon,
   HomeIcon,
 } from "@heroicons/react/outline";
+import { useSession } from "next-auth/react";
 
 const Header = () => {
+  const { data: session, status } = useSession();
+
+  console.log(session);
+  console.log(status);
+
   return (
     <div className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div
