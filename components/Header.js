@@ -15,10 +15,6 @@ import {
 } from "@heroicons/react/outline";
 
 const Header = () => {
-  const navStyle = `hidden h-6 md:inline-flex
-    cursor-pointer hover:scale-125
-    transition-all duration-150 ease-out`;
-
   return (
     <div className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div
@@ -71,9 +67,9 @@ const Header = () => {
           className="flex items-center justify-end
         space-x-4 min-w-6"
         >
-          <HomeIcon className={navStyle} />
-          <div className={navStyle.concat(" relative")}>
-            <PaperAirplaneIcon className={navStyle.concat(" rotate-45")} />
+          <HomeIcon className="navBtn" />
+          <div className="navBtn relative">
+            <PaperAirplaneIcon className="navBtn rotate-45" />
             <div
               className="absolute -top-1 -right-2 
           bg-red-500 rounded-full flex justify-center
@@ -82,9 +78,9 @@ const Header = () => {
               3
             </div>
           </div>
-          <PlusCircleIcon className={navStyle} />
-          <UserGroupIcon className={navStyle} />
-          <HeartIcon className={navStyle} />
+          <PlusCircleIcon className="navBtn" />
+          <UserGroupIcon className="navBtn" />
+          <HeartIcon className="navBtn" />
           <MenuIcon className="h-6 w-6 flex-shrink-0 md:hidden cursor-pointer" />
 
           <img
