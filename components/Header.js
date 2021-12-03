@@ -13,7 +13,7 @@ import {
   SearchIcon,
   HomeIcon,
 } from "@heroicons/react/outline";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -71,29 +71,42 @@ const Header = () => {
         {/* Right */}
         <div
           className="flex items-center justify-end
-        space-x-4 min-w-6"
+          space-x-4 min-w-6"
         >
           <HomeIcon className="navBtn" />
-          <div className="navBtn relative">
-            <PaperAirplaneIcon className="navBtn rotate-45" />
-            <div
-              className="absolute -top-1 -right-2 
-          bg-red-500 rounded-full flex justify-center
-            animate-pulse items-center text-sx w-5 h-5 text-white"
-            >
-              3
-            </div>
-          </div>
-          <PlusCircleIcon className="navBtn" />
-          <UserGroupIcon className="navBtn" />
-          <HeartIcon className="navBtn" />
           <MenuIcon className="h-6 w-6 flex-shrink-0 md:hidden cursor-pointer" />
+          {session ? (
+            <>
+              <div className="navBtn relative">
+                <PaperAirplaneIcon className="navBtn rotate-45" />
+                <div
+                  className="absolute -top-1 -right-2 
+            bg-red-500 rounded-full flex justify-center
+              animate-pulse items-center text-sx w-5 h-5 text-white"
+                >
+                  3
+                </div>
+              </div>
+              <PlusCircleIcon className="navBtn" />
+              <UserGroupIcon className="navBtn" />
+              <HeartIcon className="navBtn" />
 
-          <img
-            src="https://pbs.twimg.com/media/FEump_WVkAM-fmx?format=jpg"
-            alt="profile pic"
-            className="h-10 rounded-full cursor-pointer"
-          />
+              <img
+                onClick={signOut}
+                src={
+                  session.user.image
+                    ? session.user.image
+                    : "https://pbs.twimg.com/media/FEump_WVkAM-fmx?format=jpg"
+                }
+                alt="profile pic"
+                className="h-10 rounded-full cursor-pointer"
+              />
+            </>
+          ) : (
+            <button onClick={signIn} className="bg-blue-400">
+              Sign In
+            </button>
+          )}
         </div>
       </div>
     </div>
