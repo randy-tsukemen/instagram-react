@@ -50,6 +50,32 @@ const Modal = () => {
                 sm:p-6"
             >
               <div>
+                <div>
+                  <div className="mt-3 text-center sm:mt-5">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg leading-6 font-medium text-gray-900"
+                    >
+                      Upload a photo
+                    </Dialog.Title>
+                    <div>
+                      <input
+                        // ref={filePickerRef}
+                        type="file"
+                        hidden
+                        // onChange={addImageToPost}
+                      />
+                    </div>
+                    <div className="mt-2">
+                      <input
+                        type="text"
+                        className="border-none focus:ring-0 w-full text-center"
+                        // ref={captionRef}
+                        placeholder="Add a caption..."
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="mt-5 sm:mt-6">
                   <button
                     type="button"
