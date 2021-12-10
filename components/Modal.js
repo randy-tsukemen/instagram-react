@@ -9,7 +9,15 @@ const Modal = () => {
   const filePickerRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const addImageToPost = () => {};
+  const addImageToPost = (e) => {
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    reader.onload = (readerEvent) => {
+      setSelectedFile(readerEvent.target.result);
+    };
+  };
 
   return (
     <Transition show={open} as={Fragment}>
@@ -55,18 +63,27 @@ const Modal = () => {
                 sm:p-6"
             >
               <div>
-                <div
-                  onClick={() => {
-                    filePickerRef.current.click();
-                  }}
-                  className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100
-                  cursor-pointer"
-                >
-                  <CameraIcon
-                    className="h-6 w-6 text-red-600"
-                    aria-hidden="true"
+                {selectedFile ? (
+                  <img
+                    src={selectedFile}
+                    className="w-full object-contain cursor-pointer"
+                    onClick={() => setSelectedFile(null)}
+                    alt="selected file"
                   />
-                </div>
+                ) : (
+                  <div
+                    onClick={() => {
+                      filePickerRef.current.click();
+                    }}
+                    className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100
+                  cursor-pointer"
+                  >
+                    <CameraIcon
+                      className="h-6 w-6 text-red-600"
+                      aria-hidden="true"
+                    />
+                  </div>
+                )}
                 <div>
                   <div className="mt-3 text-center sm:mt-5">
                     <Dialog.Title
