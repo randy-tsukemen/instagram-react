@@ -1,13 +1,39 @@
+import { addDoc, collection, serverTimestamp } from "@firebase/firestore";
 import { Dialog, Transition } from "@headlessui/react";
 import { CameraIcon } from "@heroicons/react/outline";
 import { Fragment, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import { modalState } from "../atoms/modalAtom";
+import { db, storage } from "../firebase";
+import { useSession } from "next-auth/react";
 
 const Modal = () => {
+  const { data: session } = useSession();
   const [open, setOpen] = useRecoilState(modalState);
   const filePickerRef = useRef(null);
+  const captionRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const uploadPost = async () => {
+    if (loading) return;
+
+    setLoading(true);
+
+    // 1) Create a post and add to firestore "posts" collection
+    // 2) get the post id for newly created post
+    // 3) upload the image to firebase storage with the post id as the name
+    // 4) get a download url for the image from fb and update the original post in firestore
+
+    const docRef = await addDoc(collection(db, "posts"), {
+      username: session.user.username,
+      caption: captionRef.current.value,
+      profileImg: session.user.image,
+      timestamp: serverTimestamp(),
+    });
+
+    console.log("New doc add with ID: ", docRef.id);
+  };
 
   const addImageToPost = (e) => {
     const reader = new FileReader();
@@ -104,7 +130,7 @@ const Modal = () => {
                       <input
                         type="text"
                         className="border-none focus:ring-0 w-full text-center"
-                        // ref={captionRef}
+                        ref={captionRef}
                         placeholder="Add a caption..."
                       />
                     </div>
