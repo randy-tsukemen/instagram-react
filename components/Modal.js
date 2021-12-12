@@ -1,4 +1,10 @@
-import { addDoc, collection, serverTimestamp } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "@firebase/firestore";
 import { Dialog, Transition } from "@headlessui/react";
 import { CameraIcon } from "@heroicons/react/outline";
 import { Fragment, useRef, useState } from "react";
@@ -6,6 +12,7 @@ import { useRecoilState } from "recoil";
 import { modalState } from "../atoms/modalAtom";
 import { db, storage } from "../firebase";
 import { useSession } from "next-auth/react";
+import { getDownloadURL, ref, uploadString } from "@firebase/storage";
 
 const Modal = () => {
   const { data: session } = useSession();
@@ -21,10 +28,6 @@ const Modal = () => {
     setLoading(true);
 
     // 1) Create a post and add to firestore "posts" collection
-    // 2) get the post id for newly created post
-    // 3) upload the image to firebase storage with the post id as the name
-    // 4) get a download url for the image from fb and update the original post in firestore
-
     const docRef = await addDoc(collection(db, "posts"), {
       username: session.user.username,
       caption: captionRef.current.value,
@@ -33,6 +36,25 @@ const Modal = () => {
     });
 
     console.log("New doc add with ID: ", docRef.id);
+
+    // 2) get the post id for newly created post
+    const imageRef = ref(storage, `posts/${docRef.id}/image`);
+
+    // 3) upload the image to firebase storage with the post id as the name
+    await uploadString(imageRef, selectedFile, "data_url").then(
+      async (snapshot) => {
+        const downloadURL = await getDownloadURL(imageRef);
+
+        // 4) get a download url for the image from fb and update the original post in firestore
+        await updateDoc(doc(db, "posts", docRef.id), {
+          image: downloadURL,
+        });
+      }
+    );
+
+    setOpen(false);
+    setLoading(false);
+    setSelectedFile(null);
   };
 
   const addImageToPost = (e) => {
@@ -143,8 +165,10 @@ const Modal = () => {
                     shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700
                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm
                     disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
+                    disabled={!selectedFile}
+                    onClick={uploadPost}
                   >
-                    Upload Post
+                    {loading ? "Uploading..." : "Upload Post"}
                   </button>
                 </div>
               </div>
