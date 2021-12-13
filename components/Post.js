@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BookmarkIcon,
   ChatIcon,
@@ -9,13 +9,32 @@ import {
 } from "@heroicons/react/outline";
 import { HeartIcon as HeartIconFilled } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
-import { addDoc, collection, serverTimestamp } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "@firebase/firestore";
 import { db } from "../firebase";
 
 const Post = ({ id, username, userImg, img, caption }) => {
   const { data: session } = useSession();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+
+  useEffect(
+    () =>
+      onSnapshot(
+        query(
+          collection(db, "posts", id, "comments"),
+          orderBy("timestamp", "desc")
+        ),
+        (snapshot) => setComments(snapshot.docs)
+      ),
+    [db]
+  );
 
   const sendComment = async (e) => {
     e.preventDefault();
@@ -30,6 +49,8 @@ const Post = ({ id, username, userImg, img, caption }) => {
       timestamp: serverTimestamp(),
     });
   };
+
+  console.log(comments);
   return (
     <div className="bg-white my-7 border rounded-sm">
       {/* Header */}
@@ -62,7 +83,23 @@ const Post = ({ id, username, userImg, img, caption }) => {
         <span className="font-bold mr-1">{username}</span> {caption}
       </p>
       {/* comments */}
-
+      {comments.length > 0 && (
+        <div className="ml-10 h-20 overflow-y-scroll scrollbar-thumb-black scrollbar-thin">
+          {comments.map((comment) => (
+            <div
+              key={comment.id}
+              className="flex items-center p-5 space-x-2 mb-3"
+            >
+              <img
+                src={comment.data().image}
+                alt=""
+                className="h-7 rounded-full"
+              />
+              <p>Hello</p>
+            </div>
+          ))}
+        </div>
+      )}
       {/* input box */}
       {session && (
         <form className="flex items-center p-4">
