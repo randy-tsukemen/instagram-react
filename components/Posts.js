@@ -58,19 +58,6 @@ const Posts = () => {
           caption={post.data().caption}
         />
       ))}
-      {DUMMY_POSTS.map((post) => (
-        <Post
-          key={post.id}
-          id={post.id}
-          username={post.username}
-          userImg={post.userImg}
-          img={post.img}
-          caption={post.caption}
-        />
-      ))}
-      <Post />
-      <Post />
-      <Post />
     </div>
   );
 };
