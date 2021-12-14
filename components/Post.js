@@ -91,11 +91,14 @@ const Post = ({ id, username, userImg, img, caption }) => {
               className="flex items-center p-5 space-x-2 mb-3"
             >
               <img
-                src={comment.data().image}
+                src={comment.data().userImg}
                 alt=""
                 className="h-7 rounded-full"
               />
-              <p>Hello</p>
+              <p className="text-sm flex-1">
+                <span className="font-bold">{comment.data().username}</span>{" "}
+                {comment.data().comment}
+              </p>
             </div>
           ))}
         </div>
