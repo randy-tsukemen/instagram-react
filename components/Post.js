@@ -100,7 +100,9 @@ const Post = ({ id, username, userImg, img, caption }) => {
                 <span className="font-bold">{comment.data().username}</span>{" "}
                 {comment.data().comment}
               </p>
-              <Moment fromNow>{comment.data().timestamp?.toDate()}</Moment>
+              <Moment fromNow className="pr-5 text-xs">
+                {comment.data().timestamp?.toDate()}
+              </Moment>
             </div>
           ))}
         </div>
