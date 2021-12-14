@@ -1,4 +1,13 @@
-import React, { useEffect, useState } from "react";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+} from "@firebase/firestore";
 import {
   BookmarkIcon,
   ChatIcon,
@@ -7,23 +16,16 @@ import {
   HeartIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/outline";
-import { HeartIcon as HeartIconFilled } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
-import {
-  addDoc,
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-} from "@firebase/firestore";
-import { db } from "../firebase";
+import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
+import { db } from "../firebase";
 
 const Post = ({ id, username, userImg, img, caption }) => {
   const { data: session } = useSession();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [likes, setLikes] = useState([]);
 
   useEffect(
     () =>
@@ -34,8 +36,22 @@ const Post = ({ id, username, userImg, img, caption }) => {
         ),
         (snapshot) => setComments(snapshot.docs)
       ),
-    [db]
+    [db, id]
   );
+
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "posts", id, "likes"), (snapshot) =>
+        setLikes(snapshot.docs)
+      ),
+    [db, id]
+  );
+
+  const likePost = async () => {
+    await setDoc(doc(db, "posts", id, "likes", session.user.uid), {
+      id: session.user.username,
+    });
+  };
 
   const sendComment = async (e) => {
     e.preventDefault();
@@ -72,7 +88,7 @@ const Post = ({ id, username, userImg, img, caption }) => {
       {session && (
         <div className="flex justify-between px-4 py-4">
           <div className="flex space-x-4">
-            <HeartIcon className="btn" />
+            <HeartIcon onClick={likePost} className="btn" />
             <ChatIcon className="btn" />
             <PaperAirplaneIcon className="btn" />
           </div>
