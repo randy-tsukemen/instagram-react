@@ -7,6 +7,7 @@ import {
   query,
   serverTimestamp,
   setDoc,
+  deleteDoc,
 } from "@firebase/firestore";
 import {
   BookmarkIcon,
@@ -26,6 +27,7 @@ const Post = ({ id, username, userImg, img, caption }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState([]);
+  const [hasLike, setHasLike] = useState(false);
 
   useEffect(
     () =>
@@ -47,10 +49,20 @@ const Post = ({ id, username, userImg, img, caption }) => {
     [db, id]
   );
 
+  useEffect(() => {
+    setHasLike(
+      likes.findIndex((like) => like.id === session?.user?.uid) !== -1
+    );
+  }, [likes]);
+
   const likePost = async () => {
-    await setDoc(doc(db, "posts", id, "likes", session.user.uid), {
-      id: session.user.username,
-    });
+    if (hasLike) {
+      await deleteDoc(doc(db, "posts", id, "likes", session?.user?.uid));
+    } else {
+      await setDoc(doc(db, "posts", id, "likes", session.user.uid), {
+        id: session.user.username,
+      });
+    }
   };
 
   const sendComment = async (e) => {
